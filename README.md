@@ -9,3 +9,11 @@ Funcionalidades:
 
 -Enviar email alertando sobre o estoque baixo
 
+Tecnologias utilizadas:
+-Java
+
+-SQLite
+
+-Apache POI
+
+-JavaMail
