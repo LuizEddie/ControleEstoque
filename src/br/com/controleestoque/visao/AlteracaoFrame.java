@@ -81,7 +81,7 @@ public class AlteracaoFrame extends javax.swing.JFrame {
 
         ProdutosControle produtosControle = new ProdutosControle();
 
-       if((Pattern.matches("\\w+",descricaoField2.getText()) && Pattern.matches("[+-]?([0-9]*[.])?[0-9]+",valorUnitarioField.getText()) && Pattern.matches("\\d+",quantMinField.getText()))){
+       if((Pattern.matches(".+",descricaoField2.getText()) && Pattern.matches("[+-]?([0-9]*[.])?[0-9]+",valorUnitarioField.getText()) && Pattern.matches("\\d+",quantMinField.getText()))){
         
             produtosControle.alterar(descricaoField2.getText(), Float.parseFloat(valorUnitarioField.getText()), dataHojeField.getText(), codigoField2.getText(), sourcePath, Integer.parseInt(quantMinField.getText()));
             this.limparCampos();

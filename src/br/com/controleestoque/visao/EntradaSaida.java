@@ -9,104 +9,105 @@ import br.com.controleestoque.controle.ProdutosControle;
 import br.com.controleestoque.model.EmailJava;
 import br.com.controleestoque.model.Produtos;
 import java.awt.Color;
-import java.sql.SQLException;
 import java.util.regex.Pattern;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
-import org.apache.commons.mail.EmailException;
 
 /**
  *
  * @author luiz
  */
 public class EntradaSaida extends javax.swing.JFrame {
-     Produtos produtos = new Produtos();
+
+    Produtos produtos = new Produtos();
+
     /**
      * Creates new form EntradaSaida
      */
-    public EntradaSaida(){
-      initComponents();
-    }
-    
-    public void enviarEmail(String codigo){
-        EmailJava email = new EmailJava();
-        try {
-            email.verificarNecessidadeEmail(codigo);
-        } catch (ClassNotFoundException | SQLException | EmailException ex) {
-            JOptionPane.showMessageDialog(null, "Erro ao enviar o email: " + ex);
-        }
-    }
-     
-    public EntradaSaida(String codigo){
-        
+    public EntradaSaida() {
         initComponents();
-        System.out.println("Entrada e saida");
+    }
+
+    public void enviarEmail(String codigo) {
+        EmailJava email = new EmailJava();
+        email.verificarNecessidadeEmail(codigo);
+    }
+
+    public EntradaSaida(String codigo) {
+
+        initComponents();
         this.buscarProduto(codigo);
         this.dataField.setText(produtos.getDataPC());
         this.setPesquisaFieldPlaceholder();
     }
-    
-    public void limparCampos(){
+
+    public void limparCampos() {
         quantAlterarField.setText("");
     }
-    
-    public void setPesquisaFieldPlaceholder(){
+
+    public void setPesquisaFieldPlaceholder() {
         buscarField.setText("Digite o codigo do produto");
-        buscarField.setForeground(new Color(204,204,204));
+        buscarField.setForeground(new Color(204, 204, 204));
         buscarField.requestFocus();
     }
-    
-    public void buscarProduto(String codigo){
-        
-            ProdutosControle produtosControle = new ProdutosControle();
-            Produtos produto = produtosControle.consultarProduto(codigo);
-            if(produto.getCodigo() != null){
-                Float valorEstoque = produto.getValorUnitario() * produto.getQuantEstoque();
-            
-                codigoField.setText(produto.getCodigo());
-                descricaoField.setText(produto.getDescricao());
-                quantAtualField.setText(produto.getQuantEstoque().toString());
-                valorUnitarioField.setText(produto.getValorUnitario().toString());
-                valorEstoqueField.setText(valorEstoque.toString());
-                quantMinField.setText(produto.getQuantMinima().toString());
-                if(!produto.getImgPath().equals("")){
-                    ImageIcon imgIcon = new ImageIcon(produto.getImgPath());
-                    imgIcon.setImage(imgIcon.getImage().getScaledInstance(300, 354, 100));
-                    imgLabel.setIcon(imgIcon);
-                    imgLabel.setText("");
-                }else{
-                    imgLabel.setIcon(null);
-                    imgLabel.setText("Sem imagem");
-                }   
-            
-                this.addQuantButton.setEnabled(true);
-                this.retirarQuantButton.setEnabled(true);
-            }else{
-                JOptionPane.showMessageDialog(null, "Produto não encontrado");
-            }
-    }
-    
-    public void alterarEstoque(String operacao){
+
+    public void buscarProduto(String codigo) {
+
         ProdutosControle produtosControle = new ProdutosControle();
-        
-        if(!Pattern.matches("\\d+",quantAlterarField.getText())){
-            JOptionPane.showMessageDialog(null, "Preencha o campo quantidade a ser alterada");   
+        Produtos produto = produtosControle.consultarProduto(codigo);
+        if (produto.getCodigo() != null) {
+            Float valorEstoque = produto.getValorUnitario() * produto.getQuantEstoque();
+
+            codigoField.setText(produto.getCodigo());
+            descricaoField.setText(produto.getDescricao());
+            quantAtualField.setText(produto.getQuantEstoque().toString());
+            valorUnitarioField.setText(produto.getValorUnitario().toString());
+            valorEstoqueField.setText(valorEstoque.toString());
+            quantMinField.setText(produto.getQuantMinima().toString());
+            if (!produto.getImgPath().equals("")) {
+                ImageIcon imgIcon = new ImageIcon(produto.getImgPath());
+                imgIcon.setImage(imgIcon.getImage().getScaledInstance(300, 354, 100));
+                imgLabel.setIcon(imgIcon);
+                imgLabel.setText("");
+            } else {
+                imgLabel.setIcon(null);
+                imgLabel.setText("Sem imagem");
+            }
+
             this.addQuantButton.setEnabled(true);
             this.retirarQuantButton.setEnabled(true);
-        }else{
-            if(operacao == "add"){
-                produtosControle.alterarEstoque("add", codigoField.getText(), Integer.parseInt(quantAlterarField.getText()), dataField.getText());
-                JOptionPane.showMessageDialog(null, "Quantidade adicionada com sucesso");
+        } else {
+            JOptionPane.showMessageDialog(null, "Produto não encontrado");
+        }
+    }
 
-            }else if(operacao == "retirar"){
-                produtosControle.alterarEstoque("retirar", codigoField.getText(), Integer.parseInt(quantAlterarField.getText()), dataField.getText());
-                JOptionPane.showMessageDialog(null, "Quantidade retirada com sucesso");
+    public void alterarEstoque(String operacao) {
+        ProdutosControle produtosControle = new ProdutosControle();
+
+        if (!Pattern.matches("\\d+", quantAlterarField.getText())) {
+            JOptionPane.showMessageDialog(null, "Preencha o campo quantidade a ser alterada corretamente");
+            this.addQuantButton.setEnabled(true);
+            this.retirarQuantButton.setEnabled(true);
+        } else {
+            if (operacao == "add") {
+                produtosControle.alterarEstoque("add", codigoField.getText(), Integer.parseInt(quantAlterarField.getText()), dataField.getText());
+
+                enviarEmail(codigoField.getText());
+            } else if (operacao == "retirar") {
+                if (Integer.valueOf(quantAtualField.getText()) - Integer.valueOf(quantAlterarField.getText()) >= 0) {
+                    produtosControle.alterarEstoque("retirar", codigoField.getText(), Integer.parseInt(quantAlterarField.getText()), dataField.getText());
+                    enviarEmail(codigoField.getText());
+                } else {
+                    JOptionPane.showMessageDialog(null, "A quantidade em estoque não pode ficar menor que zero");
+                }
 
             }
             this.buscarProduto(codigoField.getText());
-            enviarEmail(codigoField.getText());
+
         }
+
     }
+
     /**
      * Creates new form EntradaSaidaFrame
      */
@@ -372,7 +373,7 @@ public class EntradaSaida extends javax.swing.JFrame {
 
     private void buscarFieldFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_buscarFieldFocusGained
         // TODO add your handling code here:
-        if(buscarField.getText().equals("Digite o codigo do produto")){
+        if (buscarField.getText().equals("Digite o codigo do produto")) {
             buscarField.setCaretPosition(0);
             buscarField.setCaretColor(Color.BLACK);
         }
@@ -380,25 +381,25 @@ public class EntradaSaida extends javax.swing.JFrame {
 
     private void buscarFieldFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_buscarFieldFocusLost
         // TODO add your handling code here:
-        if(buscarField.getText().equals("")){
+        if (buscarField.getText().equals("")) {
             buscarField.setText("Digite o codigo do produto");
-            buscarField.setForeground(new Color(204,204,204));
+            buscarField.setForeground(new Color(204, 204, 204));
         }
     }//GEN-LAST:event_buscarFieldFocusLost
 
     private void buscarFieldKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_buscarFieldKeyPressed
         // TODO add your handling code here:
-        if(buscarField.getText().equals("Digite o codigo do produto")){
+        if (buscarField.getText().equals("Digite o codigo do produto")) {
             buscarField.setText("");
             buscarField.setForeground(Color.BLACK);
         }
     }//GEN-LAST:event_buscarFieldKeyPressed
 
     private void buscarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_buscarButtonActionPerformed
-     
-             // TODO add your handling code here:
+
+        // TODO add your handling code here:
         this.buscarProduto(this.buscarField.getText());
-       
+
         this.limparCampos();
     }//GEN-LAST:event_buscarButtonActionPerformed
 
@@ -416,18 +417,17 @@ public class EntradaSaida extends javax.swing.JFrame {
 
     private void addQuantButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_addQuantButtonActionPerformed
 
-            this.alterarEstoque("add");
-            this.limparCampos();
-       
+        this.alterarEstoque("add");
+        this.limparCampos();
+
     }//GEN-LAST:event_addQuantButtonActionPerformed
 
     private void retirarQuantButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_retirarQuantButtonActionPerformed
-       
-            // TODO add your handling code here:
 
-            this.alterarEstoque("retirar");
-            this.limparCampos();
-       
+        // TODO add your handling code here:
+        this.alterarEstoque("retirar");
+        this.limparCampos();
+
     }//GEN-LAST:event_retirarQuantButtonActionPerformed
 
     private void quantMinFieldActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_quantMinFieldActionPerformed

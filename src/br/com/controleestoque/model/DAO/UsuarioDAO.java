@@ -46,7 +46,7 @@ public class UsuarioDAO {
             stm.close();
             
         } catch (SQLException ex) {
-            JOptionPane.showMessageDialog(null, "Erro ao executar requisição");
+            JOptionPane.showMessageDialog(null, "Ja existe um usuario com esse cadastro");
         }
     }
     

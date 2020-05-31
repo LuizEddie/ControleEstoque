@@ -240,9 +240,8 @@ public class AlterarUsuario extends javax.swing.JFrame {
 
     private void voltarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_voltarButtonActionPerformed
         // TODO add your handling code here:
-        Principal principal = new Principal();
+     
         this.setVisible(false);
-        principal.setVisible(true);
     }//GEN-LAST:event_voltarButtonActionPerformed
 
     private void alterarButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_alterarButtonActionPerformed

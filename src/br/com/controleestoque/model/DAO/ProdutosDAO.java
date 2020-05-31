@@ -514,11 +514,17 @@ public class ProdutosDAO {
                 }else if(operacao.equals("retirar")){
                     operacaoAritmetica = "-";
                 }
-                stm.executeUpdate("UPDATE 'produtos' SET quantEstoque = ((SELECT quantEstoque FROM 'produtos' WHERE codigo='"+codigo+"') "+operacaoAritmetica+" "
+                int update = stm.executeUpdate("UPDATE 'produtos' SET quantEstoque = ((SELECT quantEstoque FROM 'produtos' WHERE codigo='"+codigo+"') "+operacaoAritmetica+" "
                         + ""+quant+"), dataAlteracao = '"+dataAlteracao+"' WHERE codigo='"+codigo+"';");
                 
+                if(update > 0){
+                    mensagemPane("Estoque alterado com sucesso");
+                }else{
+                    mensagemPane("Erro ao alterar quantidade");
+                }
+                
                 stm.close();
-                mensagemPane("Estoque alterado com sucesso");
+                
             }
         }catch(Exception e){
             mensagemPane("Erro ao alterar estoque" + e);

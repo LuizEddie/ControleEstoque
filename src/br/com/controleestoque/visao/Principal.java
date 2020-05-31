@@ -64,7 +64,6 @@ public class Principal extends javax.swing.JFrame {
      */
     public Principal() {
         initComponents();
-        System.out.println(br.com.controleestoque.model.Login.getUsuarioAtivo());
         if(jTabbedPane2.getSelectedIndex() == 0){
             this.setPesquisaFieldPlaceholder();
         
@@ -1135,11 +1134,14 @@ public class Principal extends javax.swing.JFrame {
 
         ProdutosControle produtoControle = new ProdutosControle();
         
-        if(!(Pattern.matches("\\w+", codigoField.getText()) && Pattern.matches("\\w+",descricaoField.getText())  && Pattern.matches("\\d+",quantInicialField.getText()) && Pattern.matches("[+-]?([0-9]*[.])?[0-9]+",valorUniField.getText()) && Pattern.matches("\\d+",quantMinField.getText()))){
-            JOptionPane.showMessageDialog(null, "Por favor, preencher todos os campos");
-        }else{        
+        if(Pattern.matches(".+", codigoField.getText()) && Pattern.matches(".+",descricaoField.getText())  && Pattern.matches("\\d+",quantInicialField.getText()) && Pattern.matches("[+-]?([0-9]*[.])?[0-9]+",valorUniField.getText()) && Pattern.matches("\\d+",quantMinField.getText())){
+            
             produtoControle.cadastrarProduto(codigoField.getText(), descricaoField.getText(), Integer.parseInt(quantInicialField.getText()), Float.parseFloat(valorUniField.getText()), dataCadastroField.getText(), sourcePath, Integer.parseInt(quantMinField.getText()));
-            this.atualizarTabela();                
+            this.atualizarTabela();     
+        
+        }else{        
+            JOptionPane.showMessageDialog(null, "Por favor, preencher todos os campos");
+
         }
         this.limparCampos();
     }//GEN-LAST:event_cadastroButtonActionPerformed
@@ -1148,7 +1150,7 @@ public class Principal extends javax.swing.JFrame {
         // TODO add your handling code here:
         ProdutosControle produtosControle = new ProdutosControle();
 
-        if(!Pattern.matches("\\w+",codigoField.getText())){
+        if(!Pattern.matches(".+",codigoField.getText())){
             JOptionPane.showMessageDialog(null, "Por favor, preencha o campo codigo");
         }else{
             

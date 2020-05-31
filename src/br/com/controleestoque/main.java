@@ -6,9 +6,6 @@
 package br.com.controleestoque;
 import br.com.controleestoque.model.ConexaoSQLite;
 import br.com.controleestoque.visao.Login;
-import java.sql.SQLException;
-import javax.swing.JOptionPane;
-import org.apache.commons.mail.EmailException;
 /**
  *
  * @author Luiz Eduardo
@@ -18,8 +15,10 @@ public class main {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws ClassNotFoundException, SQLException, EmailException {
+    public static void main(String[] args){
         // TODO code application logic here
+        
+        
         ConexaoSQLite conexao = new ConexaoSQLite();
         
         conexao.iniciarDB();

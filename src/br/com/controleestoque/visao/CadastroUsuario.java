@@ -58,7 +58,7 @@ public class CadastroUsuario extends javax.swing.JFrame {
         voltarButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
-        setTitle("Alterar Senha");
+        setTitle("Cadastrar Usuario");
         setLocation(new java.awt.Point(500, 250));
         setResizable(false);
         addWindowListener(new java.awt.event.WindowAdapter() {
@@ -210,7 +210,7 @@ public class CadastroUsuario extends javax.swing.JFrame {
         String senha2 = new String(this.confirmarSenhaField.getPassword());
         
         if((Pattern.matches("\\w+", usuarioField.getText()) && Pattern.matches("^[A-Za-z0-9+_.-]+@(.+)$", emailField.getText()))){
-            if (Pattern.matches("\\S+",senha1) && senha1.equals(senha2)){
+            if (Pattern.matches(".+",senha1) && senha1.equals(senha2)){
                 cadastroControle.cadastrarUsuario(this.usuarioField.getText(), senha1, this.emailField.getText());
             }else{
                 JOptionPane.showMessageDialog(null, "Senha invalida");
