@@ -46,7 +46,7 @@ public class EmailJava {
         String senha = "senhaRemetente";
         /* Para o email funcionar, caso seja do google, nele deve estar habilitado o acesso
         de apps menos seguros: 
-        Link para desabilitar:
+        Link para habilitar:
         https://myaccount.google.com/u/0/security?hl=pt-BR*/
         
         try {
